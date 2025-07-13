@@ -1,14 +1,20 @@
 export class ResponsePassengerDto {
-  id: string;
+  passengerId: string;
   firstName: string;
   lastName: string;
-  email: string;
-  documentNumber: string;
+  email?: string;
+  documentNumber?: string;
   phone?: string;
   dateOfBirth?: Date;
   nationality?: string;
-  bookingReference?: string;
-  flightNumber?: string;
-  departureDate?: Date;
-  arrivalDate?: Date;
+  bookingId?: string;
+  flights?: FlightDto[];
+}
+
+export class FlightDto {
+  flightNumber: string;
+  departureDate: Date;
+  arrivalDate: Date;
+  departureAirport: string;
+  arrivalAirport: string;
 }

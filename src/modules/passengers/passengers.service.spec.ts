@@ -13,7 +13,8 @@ describe('PassengersService', () => {
   beforeEach(async () => {
     // Create a mock repository
     const mockRepositoryImpl: jest.Mocked<IPassengerRepository> = {
-      getPassengerById: jest.fn(),
+      getPassengerWithBookingFlightsById: jest.fn(),
+      getPassengerBasicById: jest.fn(),
       getPassengerByFilters: jest.fn(),
       createPassenger: jest.fn(),
       updatePassenger: jest.fn(),

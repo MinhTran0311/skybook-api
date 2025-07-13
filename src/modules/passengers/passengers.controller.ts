@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
-import { CreatePassengerDto } from './dto/create-passenger.dto';
-import { UpdatePassengerDto } from './dto/update-passenger.dto';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PassengersService } from './passengers.service';
 import { FilterPassengerDto } from './dto/filter-passenger.dto';
 
@@ -19,6 +8,16 @@ export class PassengersController {
 
   @Get(':id')
   async getPassengerById(@Param('id') id: string) {
-    return await this.passengersService.getPassengerById(id);
+    return await this.passengersService.getPassengerWithBookingFlightsById(id);
+  }
+
+  @Get(':id/basic')
+  async getPassengerBasicById(@Param('id') id: string) {
+    return await this.passengersService.getPassengerBasicById(id);
+  }
+
+  @Get('')
+  async getPassengers(@Query() query: FilterPassengerDto) {
+    return await this.passengersService.getListPassengers(query);
   }
 }
