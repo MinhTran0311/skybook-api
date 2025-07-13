@@ -31,6 +31,92 @@
 $ npm install
 ```
 
+## Database Setup
+
+This project uses PostgreSQL with Prisma ORM. Follow these steps to set up the database:
+
+### 1. Start the PostgreSQL database
+
+```bash
+# Start the database container
+$ npm run db:up
+
+# Or using docker-compose directly
+$ docker-compose up -d
+```
+
+### 2. Set up environment variables
+
+Copy the example environment file and update it with your database credentials:
+
+```bash
+$ cp env.example .env
+```
+
+### 3. Generate Prisma client and run migrations
+
+```bash
+# Generate Prisma client
+$ npm run prisma:generate
+
+# Create and apply database migrations
+$ npm run prisma:migrate
+```
+
+### 4. (Optional) Seed the database
+
+The project includes a comprehensive seed file with realistic Finnair flight data and various booking scenarios:
+
+- **Single passenger bookings**: Solo travelers on single flights
+- **Multi-flight bookings**: Passengers with connecting flights
+- **Group bookings**: Families and couples traveling together
+- **Multi-city trips**: Complex itineraries with multiple destinations
+- **Business travelers**: Premium class bookings with check-in status
+
+```bash
+$ npm run prisma:seed
+```
+
+The seed data includes:
+
+- 7 major airports (Helsinki, London, Paris, New York, Tokyo, Stockholm, Copenhagen)
+- 7 Finnair flights with realistic flight numbers and schedules
+- 4 customers with different nationalities
+- 5 different booking scenarios with various passenger configurations
+- Different travel classes (Economy, Premium Economy, Business)
+- Realistic seat assignments and boarding groups
+
+### 5. (Optional) Open Prisma Studio
+
+```bash
+$ npm run prisma:studio
+```
+
+### Database Management Commands
+
+```bash
+# Start database
+$ npm run db:up
+
+# Stop database
+$ npm run db:down
+
+# Reset database (removes all data)
+$ npm run db:reset
+
+# Generate Prisma client
+$ npm run prisma:generate
+
+# Create and apply migrations
+$ npm run prisma:migrate
+
+# Deploy migrations to production
+$ npm run prisma:migrate:deploy
+
+# Open Prisma Studio (database GUI)
+$ npm run prisma:studio
+```
+
 ## Compile and run the project
 
 ```bash

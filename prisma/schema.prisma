@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+/// @seed="ts-node prisma/seed.ts"
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id              String    @id @default(uuid())
+  firstName       String
+  lastName        String
+  email           String    @unique
+  password        String
+  phone           String?
+  loyaltyNumber   String?
+
+  bookings        Booking[]
+}
+
+model Booking {
+  id               String     @id @default(uuid())
+  customerId       String
+  bookingReference String     @unique
+  createdAt        DateTime   @default(now())
+
+  customer         Customer   @relation(fields: [customerId], references: [id])
+  passengers       Passenger[]
+  bookingFlights   BookingFlight[]
+}
+
+model Passenger {
+  id              String   @id @default(uuid())
+  bookingId       String
+  firstName       String
+  lastName        String
+  email           String
+  documentNumber  String
+  phone           String?
+  dateOfBirth     DateTime?
+  nationality     String?
+
+  booking         Booking  @relation(fields: [bookingId], references: [id])
+  tickets         Ticket[]
+}
+
+model Ticket {
+  id               String   @id @default(uuid())
+  passengerId      String
+  bookingFlightId  String
+  ticketNumber     String   @unique
+  isCheckedIn      Boolean  @default(false)
+  travelClass      String
+  seatNumber       String?
+  boardingGroup    String?
+  createdAt        DateTime @default(now())
+
+  passenger        Passenger      @relation(fields: [passengerId], references: [id])
+  bookingFlight    BookingFlight  @relation(fields: [bookingFlightId], references: [id])
+}
+
+model BookingFlight {
+  id          String     @id @default(uuid())
+  bookingId   String
+  flightId    String
+  createdAt   DateTime   @default(now())
+
+  booking         Booking        @relation(fields: [bookingId], references: [id])
+  flight          Flight         @relation(fields: [flightId], references: [id])
+  tickets         Ticket[]
+}
+
+model Flight {
+  id                  String    @id @default(uuid())
+  flightNumber        String
+  departureDate       DateTime
+  arrivalDate         DateTime
+  departureAirportId  String
+  arrivalAirportId    String
+
+  departureAirport    Airport   @relation("Departure", fields: [departureAirportId], references: [id])
+  arrivalAirport      Airport   @relation("Arrival", fields: [arrivalAirportId], references: [id])
+  bookingFlights      BookingFlight[]
+}
+
+model Airport {
+  id        String   @id
+  name      String
+  location  String
+
+  departures  Flight[] @relation("Departure")
+  arrivals    Flight[] @relation("Arrival")
+}
