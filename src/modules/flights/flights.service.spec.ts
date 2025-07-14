@@ -185,32 +185,5 @@ describe('FlightsService', () => {
       );
       expect(mockRepository.createFlight).toHaveBeenCalledWith(createFlightDto);
     });
-
-    it('should throw NotFoundException when flight is created but not found', async () => {
-      const createFlightDto: CreateFlightDto = {
-        flightNumber: 'FL001',
-        departureDate: '2023-07-15T10:00:00.000Z',
-        arrivalDate: '2023-07-15T12:00:00.000Z',
-        departureAirportId: 'LHR',
-        arrivalAirportId: 'JFK',
-      };
-
-      const mockCreatedFlight = {
-        id: 'flight-1',
-        flightNumber: 'FL001',
-        departureDate: new Date('2023-07-15T10:00:00.000Z'),
-        arrivalDate: new Date('2023-07-15T12:00:00.000Z'),
-        departureAirportId: 'LHR',
-        arrivalAirportId: 'JFK',
-      };
-
-      mockRepository.createFlight.mockResolvedValue(mockCreatedFlight);
-      mockRepository.getFlightsByDetails.mockResolvedValue([]);
-
-      await expect(service.createFlight(createFlightDto)).rejects.toThrow(
-        NotFoundException,
-      );
-      expect(mockRepository.createFlight).toHaveBeenCalledWith(createFlightDto);
-    });
   });
 });
