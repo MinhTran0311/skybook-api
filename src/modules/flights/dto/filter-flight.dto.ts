@@ -10,12 +10,12 @@ export class FilterFlightDto {
   flightNumber?: string;
 
   @IsOptional()
-  @IsDateString()
-  departureDate?: Date;
+  @IsString()
+  departureDate?: string;
 
   @IsOptional()
-  @IsDateString()
-  arrivalDate?: Date;
+  @IsString()
+  arrivalDate?: string;
 
   @IsOptional()
   @IsUUID()

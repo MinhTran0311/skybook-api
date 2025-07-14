@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Flight, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
+import { CreateFlightDto } from './dto/create-flight.dto';
 import { FilterFlightDto } from './dto/filter-flight.dto';
 
 export interface IFlightRepository {
   getFlightsByDetails(query: FilterFlightDto): Promise<Flight[]>;
+  createFlight(createFlightDto: CreateFlightDto): Promise<Flight>;
 }
 
 @Injectable()
@@ -71,5 +73,53 @@ export class FlightsRepository implements IFlightRepository {
     });
 
     return flights;
+  }
+
+  async createFlight(createFlightDto: CreateFlightDto): Promise<Flight> {
+    const {
+      flightNumber,
+      departureDate,
+      arrivalDate,
+      departureAirportId,
+      arrivalAirportId,
+    } = createFlightDto;
+
+    const [departureAirport, arrivalAirport] = await Promise.all([
+      this.prisma.airport.findUnique({
+        where: { id: departureAirportId },
+      }),
+      this.prisma.airport.findUnique({
+        where: { id: arrivalAirportId },
+      }),
+    ]);
+
+    if (!departureAirport) {
+      throw new Error(
+        `Departure airport with ID ${departureAirportId} not found`,
+      );
+    }
+
+    if (!arrivalAirport) {
+      throw new Error(`Arrival airport with ID ${arrivalAirportId} not found`);
+    }
+
+    const departure = new Date(departureDate);
+    const arrival = new Date(arrivalDate);
+
+    if (departure >= arrival) {
+      throw new Error('Departure date must be before arrival date');
+    }
+
+    const flight = await this.prisma.flight.create({
+      data: {
+        flightNumber,
+        departureDate: departure,
+        arrivalDate: arrival,
+        departureAirportId,
+        arrivalAirportId,
+      },
+    });
+
+    return flight;
   }
 }

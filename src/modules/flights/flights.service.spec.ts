@@ -3,6 +3,8 @@ import { FlightsService } from './flights.service';
 import { IFlightRepository } from './flights.repository';
 import { FLIGHT_REPOSITORY } from '../../utils/contants/repositories';
 import { FilterFlightDto } from './dto/filter-flight.dto';
+import { CreateFlightDto } from './dto/create-flight.dto';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('FlightsService', () => {
   let service: FlightsService;
@@ -12,6 +14,7 @@ describe('FlightsService', () => {
     // Create a mock repository
     const mockRepositoryImpl: jest.Mocked<IFlightRepository> = {
       getFlightsByDetails: jest.fn(),
+      createFlight: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -58,7 +61,7 @@ describe('FlightsService', () => {
     });
 
     it('should return flights when found by date range', async () => {
-      const departureDate = new Date('2023-07-15');
+      const departureDate = '2023-07-15T00:00:00.000Z';
       const filter: FilterFlightDto = {
         departureDate,
       };
@@ -134,6 +137,80 @@ describe('FlightsService', () => {
 
       expect(result).toEqual([]);
       expect(mockRepository.getFlightsByDetails).toHaveBeenCalledWith(filter);
+    });
+  });
+
+  describe('createFlight', () => {
+    it('should create a flight successfully', async () => {
+      const createFlightDto: CreateFlightDto = {
+        flightNumber: 'FL001',
+        departureDate: '2023-07-15T10:00:00.000Z',
+        arrivalDate: '2023-07-15T12:00:00.000Z',
+        departureAirportId: 'LHR',
+        arrivalAirportId: 'JFK',
+      };
+
+      const mockCreatedFlight = {
+        id: 'flight-1',
+        flightNumber: 'FL001',
+        departureDate: new Date('2023-07-15T10:00:00.000Z'),
+        arrivalDate: new Date('2023-07-15T12:00:00.000Z'),
+        departureAirportId: 'LHR',
+        arrivalAirportId: 'JFK',
+      };
+
+      mockRepository.createFlight.mockResolvedValue(mockCreatedFlight);
+
+      const result = await service.createFlight(createFlightDto);
+
+      expect(result).toEqual(mockCreatedFlight);
+      expect(mockRepository.createFlight).toHaveBeenCalledWith(createFlightDto);
+    });
+
+    it('should throw BadRequestException when repository throws error', async () => {
+      const createFlightDto: CreateFlightDto = {
+        flightNumber: 'FL001',
+        departureDate: '2023-07-15T10:00:00.000Z',
+        arrivalDate: '2023-07-15T12:00:00.000Z',
+        departureAirportId: 'LHR',
+        arrivalAirportId: 'JFK',
+      };
+
+      mockRepository.createFlight.mockRejectedValue(
+        new Error('Airport not found'),
+      );
+
+      await expect(service.createFlight(createFlightDto)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(mockRepository.createFlight).toHaveBeenCalledWith(createFlightDto);
+    });
+
+    it('should throw NotFoundException when flight is created but not found', async () => {
+      const createFlightDto: CreateFlightDto = {
+        flightNumber: 'FL001',
+        departureDate: '2023-07-15T10:00:00.000Z',
+        arrivalDate: '2023-07-15T12:00:00.000Z',
+        departureAirportId: 'LHR',
+        arrivalAirportId: 'JFK',
+      };
+
+      const mockCreatedFlight = {
+        id: 'flight-1',
+        flightNumber: 'FL001',
+        departureDate: new Date('2023-07-15T10:00:00.000Z'),
+        arrivalDate: new Date('2023-07-15T12:00:00.000Z'),
+        departureAirportId: 'LHR',
+        arrivalAirportId: 'JFK',
+      };
+
+      mockRepository.createFlight.mockResolvedValue(mockCreatedFlight);
+      mockRepository.getFlightsByDetails.mockResolvedValue([]);
+
+      await expect(service.createFlight(createFlightDto)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(mockRepository.createFlight).toHaveBeenCalledWith(createFlightDto);
     });
   });
 });
