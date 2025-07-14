@@ -30,6 +30,8 @@ model Booking {
   customer         Customer   @relation(fields: [customerId], references: [id])
   passengers       Passenger[]
   bookingFlights   BookingFlight[]
+
+  @@index([customerId, bookingReference])
 }
 
 model Passenger {
@@ -38,13 +40,15 @@ model Passenger {
   firstName       String
   lastName        String
   email           String
-  documentNumber  String
+  documentNumber  String?
   phone           String?
   dateOfBirth     DateTime?
   nationality     String?
 
   booking         Booking  @relation(fields: [bookingId], references: [id])
   tickets         Ticket[]
+
+  @@index([bookingId])
 }
 
 model Ticket {
@@ -60,6 +64,9 @@ model Ticket {
 
   passenger        Passenger      @relation(fields: [passengerId], references: [id])
   bookingFlight    BookingFlight  @relation(fields: [bookingFlightId], references: [id])
+
+  @@index([passengerId])
+  @@index([bookingFlightId])
 }
 
 model BookingFlight {
@@ -84,6 +91,8 @@ model Flight {
   departureAirport    Airport   @relation("Departure", fields: [departureAirportId], references: [id])
   arrivalAirport      Airport   @relation("Arrival", fields: [arrivalAirportId], references: [id])
   bookingFlights      BookingFlight[]
+
+  @@index([flightNumber, departureDate])
 }
 
 model Airport {

@@ -66,8 +66,6 @@ export class FlightsRepository implements IFlightRepository {
       where.arrivalAirportId = arrivalAirportId;
     }
 
-    console.log('query', query);
-
     const flights = await this.prisma.flight.findMany({
       where,
     });
