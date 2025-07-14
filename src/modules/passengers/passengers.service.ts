@@ -3,7 +3,7 @@ import {
   BOOKING_REPOSITORY,
   FLIGHT_REPOSITORY,
   PASSENGER_REPOSITORY,
-} from 'src/utils/contants/repositories';
+} from '../../utils/contants/repositories';
 import { IBookingRepository } from '../bookings/repository/bookings.repository';
 import { IFlightRepository } from '../flights/repository/flights.repository';
 import { FilterPassengerDto } from './dto/filter-passenger.dto';

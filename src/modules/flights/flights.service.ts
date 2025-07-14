@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { FilterFlightDto } from './dto/filter-flight.dto';
 import { IFlightRepository } from './repository/flights.repository';
-import { FLIGHT_REPOSITORY } from 'src/utils/contants/repositories';
+import { FLIGHT_REPOSITORY } from '../../utils/contants/repositories';
 
 @Injectable()
 export class FlightsService {

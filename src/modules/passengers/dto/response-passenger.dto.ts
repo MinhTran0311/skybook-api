@@ -5,10 +5,6 @@ export class ResponsePassengerDto {
   firstName: string;
   lastName: string;
   email?: string;
-  documentNumber?: string;
-  phone?: string;
-  dateOfBirth?: Date;
-  nationality?: string;
   bookingId?: string;
   flights?: ResponseFlightDto[];
 }

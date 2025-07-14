@@ -1,4 +1,7 @@
-import { PassengerWithFlights } from '../repository/passenger.types';
+import {
+  PassengerWithFlights,
+  PassengerWithBookingReference,
+} from '../repository/passenger.types';
 import { ResponsePassengerDto } from '../dto/response-passenger.dto';
 import { ResponseFlightDto } from 'src/modules/flights/dto/response-flight.dto';
 
@@ -9,10 +12,6 @@ export class PassengerMapper {
       firstName: passenger.firstName,
       lastName: passenger.lastName,
       email: passenger.email || undefined,
-      documentNumber: passenger.documentNumber || undefined,
-      phone: passenger.phone || undefined,
-      dateOfBirth: passenger.dateOfBirth || undefined,
-      nationality: passenger.nationality || undefined,
       bookingId: passenger.booking?.id,
       flights: this.mapFlights(passenger),
     };
