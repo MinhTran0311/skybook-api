@@ -5,27 +5,24 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
-    container_name: skybook-api
-    restart: unless-stopped
+      target: production # Use production stage for production deployment
+    container_name: skybook-api-prod
+    restart: always
     ports:
       - '3000:3000'
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - DATABASE_URL=postgresql://skybook_user:skybook_password@postgres:5432/skybook
       - PORT=3000
     depends_on:
       postgres:
         condition: service_healthy
-    command: npm run start:dev
+    command: node dist/main
 
   postgres:
     image: postgres:15-alpine
-    container_name: skybook-postgres
-    restart: unless-stopped
+    container_name: skybook-postgres-prod
+    restart: always
     environment:
       POSTGRES_DB: skybook
       POSTGRES_USER: skybook_user
@@ -33,7 +30,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_prod:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U skybook_user -d skybook']
       interval: 10s
@@ -41,4 +38,4 @@ services:
       retries: 5
 
 volumes:
-  postgres_data:
+  postgres_data_prod:

@@ -1,0 +1,41 @@
+# Git
+.git
+.gitignore
+
+# Node.js
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Build output
+dist
+build
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Tests
+coverage
+.nyc_output
+
+# IDE
+.idea
+.vscode
+*.sublime-workspace
+*.sublime-project
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Logs
+logs
+*.log
+
+# Temp files
+tmp
+temp 
