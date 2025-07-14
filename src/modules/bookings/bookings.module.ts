@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BookingsController } from './bookings.controller';
 import { BookingsService } from './bookings.service';
-import { BookingsRepository } from './repository/bookings.repository';
+import { BookingsRepository } from './bookings.repository';
 import { BOOKING_REPOSITORY } from 'src/utils/contants/repositories';
 
 @Module({

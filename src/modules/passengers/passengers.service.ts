@@ -4,15 +4,15 @@ import {
   FLIGHT_REPOSITORY,
   PASSENGER_REPOSITORY,
 } from '../../utils/contants/repositories';
-import { IBookingRepository } from '../bookings/repository/bookings.repository';
-import { IFlightRepository } from '../flights/repository/flights.repository';
+import { IBookingRepository } from '../bookings/bookings.repository';
+import { IFlightRepository } from '../flights/flights.repository';
 import { FilterPassengerDto } from './dto/filter-passenger.dto';
 import { ResponsePassengerDto } from './dto/response-passenger.dto';
 import {
   PassengerWithFlights,
   PassengerWithBookingReference,
 } from './repository/passenger.types';
-import { IPassengerRepository } from './repository/passengers.repository';
+import { IPassengerRepository } from './passengers.repository';
 import { PassengerMapper } from './utils/passenger.mapper';
 
 @Injectable()

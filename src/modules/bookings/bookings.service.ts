@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BOOKING_REPOSITORY } from '../../utils/contants/repositories';
-import { IBookingRepository } from './repository/bookings.repository';
+import { BOOKING_REPOSITORY } from 'src/utils/contants/repositories';
+import { IBookingRepository } from './bookings.repository';
 import { FilterBookingDto } from './dto/filter-booking.dto';
 
 @Injectable()

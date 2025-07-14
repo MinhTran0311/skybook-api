@@ -6,8 +6,8 @@ import {
   passengerDetailsQuery,
   PassengerWithBookingReference,
   passengerWithBookingReferenceQuery,
-} from './passenger.types';
-import { FilterPassengerDto } from '../dto/filter-passenger.dto';
+} from './repository/passenger.types';
+import { FilterPassengerDto } from './dto/filter-passenger.dto';
 
 export interface IPassengerRepository {
   getPassengerDetails(id: string): Promise<PassengerWithFlights>;

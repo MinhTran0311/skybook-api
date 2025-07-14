@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { FilterFlightDto } from './dto/filter-flight.dto';
-import { IFlightRepository } from './repository/flights.repository';
+import { IFlightRepository } from './flights.repository';
 import { FLIGHT_REPOSITORY } from '../../utils/contants/repositories';
 
 @Injectable()

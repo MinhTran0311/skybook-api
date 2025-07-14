@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FlightsService } from './flights.service';
-import { IFlightRepository } from './repository/flights.repository';
+import { IFlightRepository } from './flights.repository';
 import { FLIGHT_REPOSITORY } from '../../utils/contants/repositories';
 import { FilterFlightDto } from './dto/filter-flight.dto';
 

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BOOKING_REPOSITORY } from '../../utils/contants/repositories';
 import { BookingsService } from './bookings.service';
 import { FilterBookingDto } from './dto/filter-booking.dto';
-import { IBookingRepository } from './repository/bookings.repository';
+import { IBookingRepository } from './bookings.repository';
 
 describe('BookingsService', () => {
   let service: BookingsService;

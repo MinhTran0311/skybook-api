@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from 'src/common/prisma/prisma.module';
 import { PassengersController } from './passengers.controller';
 import { PassengersService } from './passengers.service';
-import { PassengersRepository } from './repository/passengers.repository';
+import { PassengersRepository } from './passengers.repository';
 import {
   PASSENGER_REPOSITORY,
   FLIGHT_REPOSITORY,
   BOOKING_REPOSITORY,
 } from 'src/utils/contants/repositories';
-import { FlightsRepository } from '../flights/repository/flights.repository';
-import { BookingsRepository } from '../bookings/repository/bookings.repository';
+import { FlightsRepository } from '../flights/flights.repository';
+import { BookingsRepository } from '../bookings/bookings.repository';
 
 @Module({
   imports: [PrismaModule],

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Flight, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { FilterFlightDto } from '../dto/filter-flight.dto';
+import { FilterFlightDto } from './dto/filter-flight.dto';
 
 export interface IFlightRepository {
   getFlightsByDetails(query: FilterFlightDto): Promise<Flight[]>;

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FlightsService } from './flights.service';
 import { FlightsController } from './flights.controller';
-import { FlightsRepository } from './repository/flights.repository';
+import { FlightsRepository } from './flights.repository';
 import { FLIGHT_REPOSITORY } from 'src/utils/contants/repositories';
 
 @Module({

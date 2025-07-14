@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Booking, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { FilterBookingDto } from '../dto/filter-booking.dto';
+import { FilterBookingDto } from './dto/filter-booking.dto';
 
 export interface IBookingRepository {
   getBookingByFlightIds(flightIds: string[]): Promise<Booking[]>;

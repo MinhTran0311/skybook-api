@@ -7,7 +7,7 @@ import {
   PassengerWithBookingReference,
   PassengerWithFlights,
 } from './repository/passenger.types';
-import { IPassengerRepository } from './repository/passengers.repository';
+import { IPassengerRepository } from './passengers.repository';
 
 describe('PassengersService', () => {
   let service: PassengersService;
