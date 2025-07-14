@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Flight, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CreateFlightDto } from './dto/create-flight.dto';
@@ -94,20 +98,24 @@ export class FlightsRepository implements IFlightRepository {
     ]);
 
     if (!departureAirport) {
-      throw new Error(
+      throw new NotFoundException(
         `Departure airport with ID ${departureAirportId} not found`,
       );
     }
 
     if (!arrivalAirport) {
-      throw new Error(`Arrival airport with ID ${arrivalAirportId} not found`);
+      throw new NotFoundException(
+        `Arrival airport with ID ${arrivalAirportId} not found`,
+      );
     }
 
     const departure = new Date(departureDate);
     const arrival = new Date(arrivalDate);
 
     if (departure >= arrival) {
-      throw new Error('Departure date must be before arrival date');
+      throw new BadRequestException(
+        'Departure date must be before arrival date',
+      );
     }
 
     const flight = await this.prisma.flight.create({

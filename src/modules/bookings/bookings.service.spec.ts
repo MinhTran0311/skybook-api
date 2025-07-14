@@ -3,6 +3,7 @@ import { BOOKING_REPOSITORY } from '../../utils/contants/repositories';
 import { BookingsService } from './bookings.service';
 import { FilterBookingDto } from './dto/filter-booking.dto';
 import { IBookingRepository } from './bookings.repository';
+import { NotFoundException } from '@nestjs/common';
 
 describe('BookingsService', () => {
   let service: BookingsService;
@@ -74,16 +75,18 @@ describe('BookingsService', () => {
       expect(mockRepository.getBookingByDetails).toHaveBeenCalledWith(filter);
     });
 
-    it('should return null when booking is not found', async () => {
+    it('should throw NotFoundException when booking is not found', async () => {
       const filter: FilterBookingDto = {
         id: 'nonexistent-id',
       };
 
-      mockRepository.getBookingByDetails.mockResolvedValue(null);
+      mockRepository.getBookingByDetails.mockRejectedValue(
+        new NotFoundException('Booking with ID nonexistent-id not found'),
+      );
 
-      const result = await service.getBookingByDetails(filter);
-
-      expect(result).toBeNull();
+      await expect(service.getBookingByDetails(filter)).rejects.toThrow(
+        NotFoundException,
+      );
       expect(mockRepository.getBookingByDetails).toHaveBeenCalledWith(filter);
     });
   });

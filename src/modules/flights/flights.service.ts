@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { FLIGHT_REPOSITORY } from '../../utils/contants/repositories';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { FilterFlightDto } from './dto/filter-flight.dto';
@@ -16,15 +16,7 @@ export class FlightsService {
   }
 
   async createFlight(createFlightDto: CreateFlightDto) {
-    try {
-      const flight = await this.flightRepository.createFlight(createFlightDto);
-
-      return flight;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new BadRequestException(error.message);
-      }
-      throw new BadRequestException('Failed to create flight');
-    }
+    const flight = await this.flightRepository.createFlight(createFlightDto);
+    return flight;
   }
 }

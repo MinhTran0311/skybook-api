@@ -6,6 +6,9 @@ import {
   HttpStatus,
   Param,
   Post,
+  BadRequestException,
+  NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { FlightsService } from './flights.service';
@@ -16,12 +19,30 @@ export class FlightsController {
 
   @Get(':id')
   getFlightsByDetails(@Param('id') id: string) {
-    return this.flightsService.getFlightsByDetails({ id });
+    try {
+      return this.flightsService.getFlightsByDetails({ id });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new BadRequestException('Failed to retrieve flight details');
+    }
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createFlight(@Body() createFlightDto: CreateFlightDto) {
-    return await this.flightsService.createFlight(createFlightDto);
+    try {
+      return await this.flightsService.createFlight(createFlightDto);
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException ||
+        error instanceof ConflictException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException('Failed to create flight');
+    }
   }
 }

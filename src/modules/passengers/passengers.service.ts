@@ -1,18 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  BOOKING_REPOSITORY,
-  FLIGHT_REPOSITORY,
-  PASSENGER_REPOSITORY,
-} from '../../utils/contants/repositories';
-import { IBookingRepository } from '../bookings/bookings.repository';
-import { IFlightRepository } from '../flights/flights.repository';
+import { PASSENGER_REPOSITORY } from '../../utils/contants/repositories';
 import { FilterPassengerDto } from './dto/filter-passenger.dto';
 import { ResponsePassengerDto } from './dto/response-passenger.dto';
-import {
-  PassengerWithFlights,
-  PassengerWithBookingReference,
-} from './repository/passenger.types';
 import { IPassengerRepository } from './passengers.repository';
+import {
+  PassengerWithBookingReference,
+  PassengerWithFlights,
+} from './repository/passenger.types';
 import { PassengerMapper } from './utils/passenger.mapper';
 
 @Injectable()

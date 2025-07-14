@@ -1,10 +1,14 @@
+import {
+  BadRequestException,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { FlightsService } from './flights.service';
-import { IFlightRepository } from './flights.repository';
 import { FLIGHT_REPOSITORY } from '../../utils/contants/repositories';
-import { FilterFlightDto } from './dto/filter-flight.dto';
 import { CreateFlightDto } from './dto/create-flight.dto';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { FilterFlightDto } from './dto/filter-flight.dto';
+import { IFlightRepository } from './flights.repository';
+import { FlightsService } from './flights.service';
 
 describe('FlightsService', () => {
   let service: FlightsService;
@@ -167,7 +171,7 @@ describe('FlightsService', () => {
       expect(mockRepository.createFlight).toHaveBeenCalledWith(createFlightDto);
     });
 
-    it('should throw BadRequestException when repository throws error', async () => {
+    it('should throw NotFoundException when airport not found', async () => {
       const createFlightDto: CreateFlightDto = {
         flightNumber: 'FL001',
         departureDate: '2023-07-15T10:00:00.000Z',
@@ -177,7 +181,26 @@ describe('FlightsService', () => {
       };
 
       mockRepository.createFlight.mockRejectedValue(
-        new Error('Airport not found'),
+        new NotFoundException('Departure airport with ID LHR not found'),
+      );
+
+      await expect(service.createFlight(createFlightDto)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(mockRepository.createFlight).toHaveBeenCalledWith(createFlightDto);
+    });
+
+    it('should throw BadRequestException when date validation fails', async () => {
+      const createFlightDto: CreateFlightDto = {
+        flightNumber: 'FL001',
+        departureDate: '2023-07-15T12:00:00.000Z',
+        arrivalDate: '2023-07-15T10:00:00.000Z',
+        departureAirportId: 'LHR',
+        arrivalAirportId: 'JFK',
+      };
+
+      mockRepository.createFlight.mockRejectedValue(
+        new BadRequestException('Departure date must be before arrival date'),
       );
 
       await expect(service.createFlight(createFlightDto)).rejects.toThrow(
