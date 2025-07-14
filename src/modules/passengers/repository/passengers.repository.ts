@@ -1,41 +1,33 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Passenger, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { CreatePassengerDto } from '../dto/create-passenger.dto';
-import { FilterPassengerDto } from '../dto/filter-passenger.dto';
-import { UpdatePassengerDto } from '../dto/update-passenger.dto';
 import {
   PassengerWithFlights,
-  PassengerBasic,
-  passengerWithFlightsQuery,
+  passengerDetailsQuery,
+  PassengerWithBookingReference,
+  passengerWithBookingReferenceQuery,
 } from './passenger.types';
-
-export const PASSENGER_REPOSITORY = 'PASSENGER_REPOSITORY';
+import { FilterPassengerDto } from '../dto/filter-passenger.dto';
 
 export interface IPassengerRepository {
-  getPassengerWithBookingFlightsById(id: string): Promise<PassengerWithFlights>;
-  getPassengerBasicById(id: string): Promise<PassengerBasic>;
-  getListPassengers(query: FilterPassengerDto): Promise<PassengerBasic[]>;
-  createPassenger(passenger: CreatePassengerDto): Promise<PassengerBasic>;
-  updatePassenger(
-    id: string,
-    passenger: UpdatePassengerDto,
-  ): Promise<PassengerBasic>;
-  deletePassenger(id: string): Promise<PassengerBasic>;
+  getPassengerDetails(id: string): Promise<PassengerWithFlights>;
+  getPassengerById(id: string): Promise<Passenger>;
+  // getPassengersByBookingIds(bookingIds: string[]): Promise<Passenger[]>;
+  getPassengersByFlightDetails(
+    filter: FilterPassengerDto,
+  ): Promise<PassengerWithBookingReference[]>;
 }
 
 @Injectable()
 export class PassengersRepository implements IPassengerRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getPassengerWithBookingFlightsById(
-    id: string,
-  ): Promise<PassengerWithFlights> {
+  async getPassengerDetails(id: string): Promise<PassengerWithFlights> {
     try {
       const passengerWithFlights =
         await this.prisma.passenger.findUniqueOrThrow({
           where: { id },
-          ...passengerWithFlightsQuery,
+          ...passengerDetailsQuery,
         });
 
       return passengerWithFlights;
@@ -44,49 +36,7 @@ export class PassengersRepository implements IPassengerRepository {
     }
   }
 
-  async getListPassengers(
-    query: FilterPassengerDto,
-  ): Promise<PassengerBasic[]> {
-    const {
-      id,
-      firstName,
-      lastName,
-      bookingReference,
-      flightNumber,
-      departureDate,
-      arrivalDate,
-    } = query;
-    const where: Prisma.PassengerWhereInput = {};
-    if (id) {
-      where.id = id;
-    }
-    if (firstName) {
-      where.firstName = firstName;
-    }
-    if (lastName) {
-      where.lastName = lastName;
-    }
-
-    const passengers = await this.prisma.passenger.findMany({
-      where,
-    });
-
-    return passengers;
-  }
-  createPassenger(passenger: CreatePassengerDto): Promise<PassengerBasic> {
-    throw new Error('Method not implemented.');
-  }
-  updatePassenger(
-    id: string,
-    passenger: UpdatePassengerDto,
-  ): Promise<PassengerBasic> {
-    throw new Error('Method not implemented.');
-  }
-  deletePassenger(id: string): Promise<PassengerBasic> {
-    throw new Error('Method not implemented.');
-  }
-
-  async getPassengerBasicById(id: string): Promise<PassengerBasic> {
+  async getPassengerById(id: string): Promise<Passenger> {
     try {
       const passenger = await this.prisma.passenger.findUniqueOrThrow({
         where: { id },
@@ -96,4 +46,49 @@ export class PassengersRepository implements IPassengerRepository {
       throw new NotFoundException(`Passenger with ID ${id} not found`);
     }
   }
+
+  async getPassengersByFlightDetails(
+    filter: FilterPassengerDto,
+  ): Promise<PassengerWithBookingReference[]> {
+    const { flightNumber, departureDate, arrivalDate } = filter;
+
+    const departureDateFilter = departureDate
+      ? {
+          gte: new Date(new Date(departureDate).setUTCHours(0, 0, 0, 0)),
+          lte: new Date(new Date(departureDate).setUTCHours(23, 59, 59, 999)),
+        }
+      : undefined;
+
+    const arrivalDateFilter = arrivalDate
+      ? {
+          gte: new Date(new Date(arrivalDate).setUTCHours(0, 0, 0, 0)),
+          lte: new Date(new Date(arrivalDate).setUTCHours(23, 59, 59, 999)),
+        }
+      : undefined;
+
+    // Find passengers with bookings on the specified flight
+    return this.prisma.passenger.findMany({
+      where: {
+        booking: {
+          bookingFlights: {
+            some: {
+              flight: {
+                flightNumber: flightNumber || undefined,
+                departureDate: departureDateFilter,
+                arrivalDate: arrivalDateFilter,
+              },
+            },
+          },
+        },
+      },
+      ...passengerWithBookingReferenceQuery,
+    });
+  }
+
+  // service orchestrator approach
+  // async getPassengersByBookingIds(bookingIds: string[]): Promise<Passenger[]> {
+  //   return this.prisma.passenger.findMany({
+  //     where: { bookingId: { in: bookingIds } },
+  //   });
+  // }
 }

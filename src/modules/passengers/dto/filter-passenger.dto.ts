@@ -1,24 +1,34 @@
-import { IsDate, IsString, IsUUID } from 'class-validator';
+import { IsDate, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class FilterPassengerDto {
+  @IsOptional()
   @IsUUID()
   id?: string;
 
+  @IsOptional()
   @IsString()
   firstName?: string;
 
+  @IsOptional()
   @IsString()
   lastName?: string;
 
+  @IsOptional()
   @IsString()
   bookingReference?: string;
 
+  @IsOptional()
   @IsString()
   flightNumber?: string;
 
+  @IsOptional()
+  @Type(() => Date)
   @IsDate()
   departureDate?: Date;
 
+  @IsOptional()
+  @Type(() => Date)
   @IsDate()
   arrivalDate?: Date;
 }

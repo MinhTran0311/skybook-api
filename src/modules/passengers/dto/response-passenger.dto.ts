@@ -1,3 +1,5 @@
+import { ResponseFlightDto } from 'src/modules/flights/dto/response-flight.dto';
+
 export class ResponsePassengerDto {
   passengerId: string;
   firstName: string;
@@ -8,13 +10,5 @@ export class ResponsePassengerDto {
   dateOfBirth?: Date;
   nationality?: string;
   bookingId?: string;
-  flights?: FlightDto[];
-}
-
-export class FlightDto {
-  flightNumber: string;
-  departureDate: Date;
-  arrivalDate: Date;
-  departureAirport: string;
-  arrivalAirport: string;
+  flights?: ResponseFlightDto[];
 }

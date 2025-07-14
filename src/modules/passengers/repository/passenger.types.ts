@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-export const passengerWithFlightsQuery =
+export const passengerDetailsQuery =
   Prisma.validator<Prisma.PassengerDefaultArgs>()({
     include: {
       booking: {
@@ -15,8 +15,22 @@ export const passengerWithFlightsQuery =
     },
   });
 
+export const passengerWithBookingReferenceQuery =
+  Prisma.validator<Prisma.PassengerDefaultArgs>()({
+    include: {
+      booking: {
+        select: {
+          id: true,
+          bookingReference: true,
+        },
+      },
+    },
+  });
+
 export type PassengerWithFlights = Prisma.PassengerGetPayload<
-  typeof passengerWithFlightsQuery
+  typeof passengerDetailsQuery
 >;
 
-export type PassengerBasic = Prisma.PassengerGetPayload<{}>;
+export type PassengerWithBookingReference = Prisma.PassengerGetPayload<
+  typeof passengerWithBookingReferenceQuery
+>;

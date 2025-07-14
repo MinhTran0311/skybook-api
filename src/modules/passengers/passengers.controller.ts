@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { PassengersService } from './passengers.service';
 import { FilterPassengerDto } from './dto/filter-passenger.dto';
+import { PassengersService } from './passengers.service';
 
 @Controller('passengers')
 export class PassengersController {
@@ -8,16 +8,22 @@ export class PassengersController {
 
   @Get(':id')
   async getPassengerById(@Param('id') id: string) {
-    return await this.passengersService.getPassengerWithBookingFlightsById(id);
+    return await this.passengersService.getPassengerDetails(id);
   }
 
-  @Get(':id/basic')
+  @Get('details/:id')
   async getPassengerBasicById(@Param('id') id: string) {
-    return await this.passengersService.getPassengerBasicById(id);
+    return await this.passengersService.getPassengerById(id);
   }
 
-  @Get('')
+  @Get()
   async getPassengers(@Query() query: FilterPassengerDto) {
-    return await this.passengersService.getListPassengers(query);
+    return await this.passengersService.getPassengersByFlightDetails(query);
   }
+
+  // service orchestrator approach
+  // @Get('')
+  // async getPassengers(@Query() query: FilterPassengerDto) {
+  //   return await this.passengersService.getPassengersByFlightDetails(query);
+  // }
 }
