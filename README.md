@@ -4,7 +4,7 @@ A flight booking management API built with NestJS, Prisma, and PostgreSQL.
 
 ## Features
 
-- **Passenger Information Retriever**: Create, retrieve, and filter flights
+- **Passenger Information Retriever**: Retrieve passengers information
 - **Database**: PostgreSQL with Prisma ORM
 - **Docker Support**: Containerized development environment
 
