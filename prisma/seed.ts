@@ -88,8 +88,8 @@ async function main() {
     prisma.flight.create({
       data: {
         flightNumber: 'AY1234',
-        departureDate: new Date('2024-03-16T14:00:00Z'),
-        arrivalDate: new Date('2024-03-16T16:15:00Z'),
+        departureDate: new Date('2024-03-15T14:00:00Z'),
+        arrivalDate: new Date('2024-03-15T16:15:00Z'),
         departureAirportId: 'LHR',
         arrivalAirportId: 'CDG',
       },
@@ -211,6 +211,13 @@ async function main() {
     },
   });
 
+  const bookingFlight10 = await prisma.bookingFlight.create({
+    data: {
+      bookingId: booking1.id,
+      flightId: flights[1].id,
+    },
+  });
+
   const passenger1 = await prisma.passenger.create({
     data: {
       bookingId: booking1.id,
@@ -236,6 +243,18 @@ async function main() {
     },
   });
 
+  await prisma.ticket.create({
+    data: {
+      passengerId: passenger1.id,
+      bookingFlightId: bookingFlight10.id,
+      ticketNumber: '105-2403184544',
+      travelClass: 'Economy',
+      seatNumber: '12A',
+      boardingGroup: 'A',
+      isCheckedIn: true,
+    },
+  });
+
   // Scenario 2: Customer booking for herself and partner (Anna + Partner to Paris via London)
   const booking2 = await prisma.booking.create({
     data: {
@@ -251,12 +270,12 @@ async function main() {
     },
   });
 
-  const bookingFlight2b = await prisma.bookingFlight.create({
-    data: {
-      bookingId: booking2.id,
-      flightId: flights[1].id, // London to Paris
-    },
-  });
+  // const bookingFlight2b = await prisma.bookingFlight.create({
+  //   data: {
+  //     bookingId: booking2.id,
+  //     flightId: flights[1].id, // London to Paris
+  //   },
+  // });
 
   const passenger2a = await prisma.passenger.create({
     data: {
@@ -297,16 +316,16 @@ async function main() {
     },
   });
 
-  await prisma.ticket.create({
-    data: {
-      passengerId: passenger2a.id,
-      bookingFlightId: bookingFlight2b.id,
-      ticketNumber: '105-2403184569',
-      travelClass: 'Business',
-      seatNumber: '23A',
-      boardingGroup: 'A',
-    },
-  });
+  // await prisma.ticket.create({
+  //   data: {
+  //     passengerId: passenger2a.id,
+  //     bookingFlightId: bookingFlight2b.id,
+  //     ticketNumber: '105-2403184569',
+  //     travelClass: 'Business',
+  //     seatNumber: '23A',
+  //     boardingGroup: 'A',
+  //   },
+  // });
 
   // Tickets for Johan
   await prisma.ticket.create({
@@ -321,16 +340,16 @@ async function main() {
     },
   });
 
-  await prisma.ticket.create({
-    data: {
-      passengerId: passenger2b.id,
-      bookingFlightId: bookingFlight2b.id,
-      ticketNumber: '105-2403184571',
-      travelClass: 'Business',
-      seatNumber: '23B',
-      boardingGroup: 'A',
-    },
-  });
+  // await prisma.ticket.create({
+  //   data: {
+  //     passengerId: passenger2b.id,
+  //     bookingFlightId: bookingFlight2b.id,
+  //     ticketNumber: '105-2403184571',
+  //     travelClass: 'Business',
+  //     seatNumber: '23B',
+  //     boardingGroup: 'A',
+  //   },
+  // });
 
   // Scenario 3: Family booking with multiple flights (Erik's family to Tokyo)
   const booking3 = await prisma.booking.create({

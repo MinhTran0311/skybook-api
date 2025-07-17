@@ -19,10 +19,18 @@ export const passengerWithBookingReferenceQuery =
   Prisma.validator<Prisma.PassengerDefaultArgs>()({
     include: {
       booking: {
-        select: {
-          id: true,
-          bookingReference: true,
+        include: {
+          bookingFlights: {
+            include: {
+              flight: true,
+            },
+          },
         },
+
+        // select: {
+        //   id: true,
+        //   bookingReference: true,
+        // },
       },
     },
   });

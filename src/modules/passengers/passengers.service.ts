@@ -14,12 +14,6 @@ export class PassengersService {
   constructor(
     @Inject(PASSENGER_REPOSITORY)
     private readonly passengerRepository: IPassengerRepository,
-
-    // service orchestrator approach
-    // @Inject(FLIGHT_REPOSITORY)
-    // private readonly flightRepository: IFlightRepository,
-    // @Inject(BOOKING_REPOSITORY)
-    // private readonly bookingRepository: IBookingRepository,
   ) {}
 
   async getPassengerDetails(id: string): Promise<ResponsePassengerDto> {
@@ -37,9 +31,17 @@ export class PassengersService {
   async getPassengersByFlightDetails(
     filter: FilterPassengerDto,
   ): Promise<ResponsePassengerDto[]> {
-    const passengers: PassengerWithBookingReference[] =
+    let passengers: PassengerWithBookingReference[] =
       await this.passengerRepository.getPassengersByFlightDetails(filter);
 
+    if (filter.connectingFlight) {
+      passengers = passengers.filter((passenger) => {
+        if (passenger.booking.bookingFlights.length > 1) {
+          return passenger;
+        }
+      });
+      console.log(JSON.stringify(passengers, null, 2));
+    }
     return passengers.map((passenger) => ({
       passengerId: passenger.id,
       firstName: passenger.firstName,
@@ -47,38 +49,4 @@ export class PassengersService {
       bookingId: passenger.booking?.bookingReference || '',
     }));
   }
-
-  // service orchestrator approach
-  // async getPassengersByFlightDetails(flightDetails: FilterPassengerDto) {
-  //   const flights = await this.flightRepository.getFlightsByDetails({
-  //     flightNumber: flightDetails.flightNumber,
-  //     departureDate: flightDetails.departureDate,
-  //     arrivalDate: flightDetails.arrivalDate,
-  //   });
-
-  //   if (!flights.length) return [];
-
-  //   const flightIds = flights.map((f) => f.id);
-
-  //   const bookings =
-  //     await this.bookingRepository.getBookingByFlightIds(flightIds);
-
-  //   const bookingIds = bookings.map((b) => b.id);
-
-  //   if (!bookingIds.length) return [];
-
-  //   const passengers =
-  //     await this.passengerRepository.getPassengersByBookingIds(bookingIds);
-
-  //   const bookingReferenceMap = new Map(
-  //     bookings.map((booking) => [booking.id, booking.bookingReference]),
-  //   );
-
-  //   return passengers.map((passenger) => ({
-  //     passengerId: passenger.id,
-  //     firstName: passenger.firstName,
-  //     lastName: passenger.lastName,
-  //     bookingId: bookingReferenceMap.get(passenger.bookingId),
-  //   })) as ResponsePassengerDto[];
-  // }
 }

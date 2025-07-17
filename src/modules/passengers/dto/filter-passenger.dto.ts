@@ -1,5 +1,5 @@
-import { IsDate, IsOptional, IsString, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsDate, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class FilterPassengerDto {
   @IsOptional()
@@ -31,4 +31,8 @@ export class FilterPassengerDto {
   @Type(() => Date)
   @IsDate()
   arrivalDate?: Date;
+
+  @IsOptional()
+  @IsString()
+  connectingFlight?: string;
 }
